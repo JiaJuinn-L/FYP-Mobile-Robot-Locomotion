@@ -1,0 +1,204 @@
+2025-08-05 01:42:21,810 - INFO - 
+Starting Simulation with the following configuration:
+2025-08-05 01:42:21,810 - INFO - Algorithms: ['astar', 'dijkstra', 'dstar_lite']
+2025-08-05 01:42:21,810 - INFO - Grid configurations: [(100, 0.2), (200, 0.2)]
+2025-08-05 01:42:21,810 - INFO - ==================================================
+2025-08-05 01:42:21,811 - INFO - Starting static pathfinding simulation
+2025-08-05 01:42:21,811 - INFO - Total configurations to test: 6
+2025-08-05 01:42:21,811 - INFO - Trials per configuration: 100
+2025-08-05 01:42:21,811 - INFO - Maximum cell cost: 5
+2025-08-05 01:42:21,815 - INFO - Random seed: 232
+2025-08-05 01:42:21,815 - INFO - ==================================================
+2025-08-05 01:42:21,815 - INFO - 
+Testing grid size: 100×100 with 20.0% obstacles
+2025-08-05 01:42:21,815 - INFO - 
+Configuration 1/6:
+2025-08-05 01:42:21,815 - INFO - Running astar
+2025-08-05 01:42:22,012 - INFO - Running trial 10/100
+2025-08-05 01:42:22,242 - INFO - Running trial 20/100
+2025-08-05 01:42:22,433 - INFO - Running trial 30/100
+2025-08-05 01:42:22,620 - INFO - Running trial 40/100
+2025-08-05 01:42:22,829 - INFO - Running trial 50/100
+2025-08-05 01:42:23,039 - INFO - Running trial 60/100
+2025-08-05 01:42:23,227 - INFO - Running trial 70/100
+2025-08-05 01:42:23,455 - INFO - Running trial 80/100
+2025-08-05 01:42:23,665 - INFO - Running trial 90/100
+2025-08-05 01:42:23,873 - INFO - Running trial 100/100
+2025-08-05 01:42:23,896 - INFO - Results for astar on 100×100 grid:
+2025-08-05 01:42:23,896 - INFO - Success rate: 83.0%
+2025-08-05 01:42:23,896 - INFO - Average time: 20.02ms
+2025-08-05 01:42:23,896 - INFO - Average path length: 155.08
+2025-08-05 01:42:23,896 - INFO - Average path cost: 357.74
+2025-08-05 01:42:23,896 - INFO - ----------------------------------------
+2025-08-05 01:42:23,897 - INFO - 
+Configuration 2/6:
+2025-08-05 01:42:23,897 - INFO - Running dijkstra
+2025-08-05 01:42:24,072 - INFO - Running trial 10/100
+2025-08-05 01:42:24,277 - INFO - Running trial 20/100
+2025-08-05 01:42:24,449 - INFO - Running trial 30/100
+2025-08-05 01:42:24,617 - INFO - Running trial 40/100
+2025-08-05 01:42:24,802 - INFO - Running trial 50/100
+2025-08-05 01:42:24,990 - INFO - Running trial 60/100
+2025-08-05 01:42:25,159 - INFO - Running trial 70/100
+2025-08-05 01:42:25,364 - INFO - Running trial 80/100
+2025-08-05 01:42:25,554 - INFO - Running trial 90/100
+2025-08-05 01:42:25,741 - INFO - Running trial 100/100
+2025-08-05 01:42:25,762 - INFO - Results for dijkstra on 100×100 grid:
+2025-08-05 01:42:25,762 - INFO - Success rate: 83.0%
+2025-08-05 01:42:25,762 - INFO - Average time: 17.68ms
+2025-08-05 01:42:25,762 - INFO - Average path length: 154.99
+2025-08-05 01:42:25,762 - INFO - Average path cost: 357.74
+2025-08-05 01:42:25,762 - INFO - ----------------------------------------
+2025-08-05 01:42:25,763 - INFO - 
+Configuration 3/6:
+2025-08-05 01:42:25,763 - INFO - Running dstar_lite
+2025-08-05 01:42:30,578 - INFO - Running trial 10/100
+2025-08-05 01:42:36,106 - INFO - Running trial 20/100
+2025-08-05 01:42:42,212 - INFO - Running trial 30/100
+2025-08-05 01:42:46,431 - INFO - Running trial 40/100
+2025-08-05 01:42:52,494 - INFO - Running trial 50/100
+2025-08-05 01:42:58,043 - INFO - Running trial 60/100
+2025-08-05 01:43:03,529 - INFO - Running trial 70/100
+2025-08-05 01:43:09,149 - INFO - Running trial 80/100
+2025-08-05 01:43:15,486 - INFO - Running trial 90/100
+2025-08-05 01:43:21,742 - INFO - Running trial 100/100
+2025-08-05 01:43:22,391 - INFO - Results for dstar_lite on 100×100 grid:
+2025-08-05 01:43:22,391 - INFO - Success rate: 83.0%
+2025-08-05 01:43:22,391 - INFO - Average time: 611.98ms
+2025-08-05 01:43:22,391 - INFO - Average path length: 155.2
+2025-08-05 01:43:22,392 - INFO - Average path cost: 357.74
+2025-08-05 01:43:22,392 - INFO - ----------------------------------------
+2025-08-05 01:43:22,392 - INFO - 
+Testing grid size: 200×200 with 20.0% obstacles
+2025-08-05 01:43:22,392 - INFO - 
+Configuration 4/6:
+2025-08-05 01:43:22,392 - INFO - Running astar
+2025-08-05 01:43:23,316 - INFO - Running trial 10/100
+2025-08-05 01:43:24,365 - INFO - Running trial 20/100
+2025-08-05 01:43:25,404 - INFO - Running trial 30/100
+2025-08-05 01:43:26,378 - INFO - Running trial 40/100
+2025-08-05 01:43:27,335 - INFO - Running trial 50/100
+2025-08-05 01:43:28,306 - INFO - Running trial 60/100
+2025-08-05 01:43:29,213 - INFO - Running trial 70/100
+2025-08-05 01:43:30,086 - INFO - Running trial 80/100
+2025-08-05 01:43:31,049 - INFO - Running trial 90/100
+2025-08-05 01:43:32,040 - INFO - Running trial 100/100
+2025-08-05 01:43:32,140 - INFO - Results for astar on 200×200 grid:
+2025-08-05 01:43:32,140 - INFO - Success rate: 89.0%
+2025-08-05 01:43:32,140 - INFO - Average time: 89.43ms
+2025-08-05 01:43:32,141 - INFO - Average path length: 310.16
+2025-08-05 01:43:32,141 - INFO - Average path cost: 701.34
+2025-08-05 01:43:32,141 - INFO - ----------------------------------------
+2025-08-05 01:43:32,141 - INFO - 
+Configuration 5/6:
+2025-08-05 01:43:32,142 - INFO - Running dijkstra
+2025-08-05 01:43:32,929 - INFO - Running trial 10/100
+2025-08-05 01:43:33,795 - INFO - Running trial 20/100
+2025-08-05 01:43:34,662 - INFO - Running trial 30/100
+2025-08-05 01:43:35,451 - INFO - Running trial 40/100
+2025-08-05 01:43:36,241 - INFO - Running trial 50/100
+2025-08-05 01:43:37,036 - INFO - Running trial 60/100
+2025-08-05 01:43:37,824 - INFO - Running trial 70/100
+2025-08-05 01:43:38,615 - INFO - Running trial 80/100
+2025-08-05 01:43:39,470 - INFO - Running trial 90/100
+2025-08-05 01:43:40,344 - INFO - Running trial 100/100
+2025-08-05 01:43:40,429 - INFO - Results for dijkstra on 200×200 grid:
+2025-08-05 01:43:40,429 - INFO - Success rate: 89.0%
+2025-08-05 01:43:40,429 - INFO - Average time: 74.73ms
+2025-08-05 01:43:40,429 - INFO - Average path length: 310.08
+2025-08-05 01:43:40,430 - INFO - Average path cost: 701.34
+2025-08-05 01:43:40,430 - INFO - ----------------------------------------
+2025-08-05 01:43:40,430 - INFO - 
+Configuration 6/6:
+2025-08-05 01:43:40,430 - INFO - Running dstar_lite
+2025-08-05 01:44:17,253 - INFO - Running trial 10/100
+2025-08-05 01:44:58,454 - INFO - Running trial 20/100
+2025-08-05 01:45:45,056 - INFO - Running trial 30/100
+2025-08-05 01:46:31,486 - INFO - Running trial 40/100
+2025-08-05 01:47:18,131 - INFO - Running trial 50/100
+2025-08-05 01:48:00,533 - INFO - Running trial 60/100
+2025-08-05 01:48:42,397 - INFO - Running trial 70/100
+2025-08-05 01:49:19,626 - INFO - Running trial 80/100
+2025-08-05 01:50:05,420 - INFO - Running trial 90/100
+2025-08-05 01:50:51,895 - INFO - Running trial 100/100
+2025-08-05 01:50:56,482 - INFO - Results for dstar_lite on 200×200 grid:
+2025-08-05 01:50:56,482 - INFO - Success rate: 89.0%
+2025-08-05 01:50:56,482 - INFO - Average time: 4624.11ms
+2025-08-05 01:50:56,482 - INFO - Average path length: 310.24
+2025-08-05 01:50:56,482 - INFO - Average path cost: 701.34
+2025-08-05 01:50:56,482 - INFO - ----------------------------------------
+2025-08-05 01:50:56,484 - INFO - 
+FINAL SIMULATION RESULTS
+2025-08-05 01:50:56,484 - INFO - ==================================================
+2025-08-05 01:50:56,484 - INFO - 
+Grid Size: 100×100
+Algorithm: astar
+Success Rate: 83.0%
+Average Time: 20.02ms
+Average Path Length: 155.08
+Average Path Cost: 357.74
+Average Nodes Visited: 7848.49
+Min/Max Time: 18.81ms / 22.15ms
+Min/Max Path Length: 145 / 165
+Min/Max Path Cost: 333.94 / 390.76
+----------------------------------------
+2025-08-05 01:50:56,485 - INFO - 
+Grid Size: 100×100
+Algorithm: dijkstra
+Success Rate: 83.0%
+Average Time: 17.68ms
+Average Path Length: 154.99
+Average Path Cost: 357.74
+Average Nodes Visited: 7976.82
+Min/Max Time: 16.93ms / 19.37ms
+Min/Max Path Length: 145 / 165
+Min/Max Path Cost: 333.94 / 390.76
+----------------------------------------
+2025-08-05 01:50:56,485 - INFO - 
+Grid Size: 100×100
+Algorithm: dstar_lite
+Success Rate: 83.0%
+Average Time: 611.98ms
+Average Path Length: 155.20
+Average Path Cost: 357.74
+Average Nodes Visited: 7982.46
+Min/Max Time: 560.10ms / 676.98ms
+Min/Max Path Length: 145 / 166
+Min/Max Path Cost: 333.94 / 390.76
+----------------------------------------
+2025-08-05 01:50:56,485 - INFO - 
+Grid Size: 200×200
+Algorithm: astar
+Success Rate: 89.0%
+Average Time: 89.43ms
+Average Path Length: 310.16
+Average Path Cost: 701.34
+Average Nodes Visited: 31727.48
+Min/Max Time: 81.36ms / 114.54ms
+Min/Max Path Length: 294 / 332
+Min/Max Path Cost: 667.09 / 742.43
+----------------------------------------
+2025-08-05 01:50:56,485 - INFO - 
+Grid Size: 200×200
+Algorithm: dijkstra
+Success Rate: 89.0%
+Average Time: 74.73ms
+Average Path Length: 310.08
+Average Path Cost: 701.34
+Average Nodes Visited: 31925.36
+Min/Max Time: 71.53ms / 81.10ms
+Min/Max Path Length: 293 / 332
+Min/Max Path Cost: 667.09 / 742.43
+----------------------------------------
+2025-08-05 01:50:56,486 - INFO - 
+Grid Size: 200×200
+Algorithm: dstar_lite
+Success Rate: 89.0%
+Average Time: 4624.11ms
+Average Path Length: 310.24
+Average Path Cost: 701.34
+Average Nodes Visited: 31931.90
+Min/Max Time: 4316.34ms / 4862.57ms
+Min/Max Path Length: 294 / 332
+Min/Max Path Cost: 667.09 / 742.43
+----------------------------------------

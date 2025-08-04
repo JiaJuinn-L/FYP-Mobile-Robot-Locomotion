@@ -152,13 +152,13 @@ def run_static_simulation(algorithms, configurations, trials=1, max_cost=5, seed
 # Configuration
 algorithms = [astar, dijkstra, dstar_lite]
 configurations = [
-    (10, 0.2),    # Very small grid
-    (30, 0.2),    # Small grid
-    (50, 0.2),    # Medium grid
-    (70, 0.2),    # Medium-large grid
+    # (10, 0.2),    # Very small grid
+    # (30, 0.2),    # Small grid
+    # (50, 0.2),    # Medium grid
+    # (70, 0.2),    # Medium-large grid
     (100, 0.2),   # Large grid
     (200, 0.2),   # Very large grid
-    (500, 0.2)    # Huge grid
+    # (500, 0.2)    # Huge grid
 ]
 
 # Run simulation with reproducible results
@@ -172,7 +172,7 @@ simulation_results = run_static_simulation(
     configurations=configurations,
     trials=100,  # Number of trials per configuration
     max_cost=5,  # Maximum cost for non-obstacle cells
-    seed=42      # Fixed seed for reproducibility
+    seed=random.randint(1,1000)      # Fixed seed for reproducibility
 )
 
 # Display and log final results
