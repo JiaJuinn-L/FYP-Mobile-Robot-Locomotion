@@ -2,36 +2,92 @@ import numpy as np
 import time
 import heapq
 from statistics import mean
+import random
+import logging
+from datetime import datetime
 
-def random_grid(size, obstacle_prob):
-    grid = np.random.choice([1, 9], size=(size, size), p=[1 - obstacle_prob, obstacle_prob])
-    grid[0, 0] = grid[-1, -1] = 1  # Ensure start and goal are accessible
-    return grid.tolist()
+from astar_pure import astar
+from dijkstra_pure import dijkstra
+from dstar_lite_pure import dstar_lite
 
-def dynamic_obstacles(grid, change_prob=0.05):
-    size = len(grid)
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(f'simulation_log_{datetime.now().strftime("%Y%m%d_%H%M%S")}.txt'),
+        logging.StreamHandler()
+    ]
+)
+
+def generate_static_grid(size, obstacle_prob, max_cost=5, seed=None):
+    """
+    Generate a static grid with weighted costs and obstacles.
+    Args:
+        size: Grid size (N x N)
+        obstacle_prob: Probability of obstacles (0-1)
+        max_cost: Maximum cost for non-obstacle cells (default: 5)
+        seed: Random seed for reproducibility
+    Returns:
+        grid: 2D list with costs (1-max_cost) and obstacles (9)
+    """
+    if seed is not None:
+        random.seed(seed)
+        np.random.seed(seed)
+
+    grid = []
     for i in range(size):
+        row = []
         for j in range(size):
-            if (i, j) in [(0, 0), (size - 1, size - 1)]:
-                continue
-            if np.random.rand() < change_prob:
-                grid[i][j] = 9 if grid[i][j] != 9 else 1
+            if (i, j) in [(0, 0), (size-1, size-1)]:  # Start and goal positions
+                row.append(1)  # Minimum cost for start/goal
+            elif random.random() < obstacle_prob:
+                row.append(9)  # Obstacle
+            else:
+                row.append(random.randint(1, max_cost))  # Random cost
+        grid.append(row)
     return grid
 
-def run_dynamic_simulation(algorithms, configurations, trials=100):
+def run_static_simulation(algorithms, configurations, trials=1, max_cost=5, seed=None):
+    """
+    Run static pathfinding simulation with different algorithms and grid configurations.
+    Args:
+        algorithms: List of pathfinding algorithms to test
+        configurations: List of tuples (grid_size, obstacle_prob)
+        trials: Number of trials per configuration
+        max_cost: Maximum cost for non-obstacle cells
+        seed: Random seed for reproducibility
+    """
     results = []
+    total_configs = len(configurations) * len(algorithms)
+    current_config = 0
+
+    logging.info("Starting static pathfinding simulation")
+    logging.info(f"Total configurations to test: {total_configs}")
+    logging.info(f"Trials per configuration: {trials}")
+    logging.info(f"Maximum cell cost: {max_cost}")
+    logging.info(f"Random seed: {seed}")
+    logging.info("=" * 50)
 
     for grid_size, obstacle_prob in configurations:
+        logging.info(f"\nTesting grid size: {grid_size}×{grid_size} with {obstacle_prob*100}% obstacles")
+        # Use different seeds for different configurations but keep them consistent across algorithms
+        trial_seeds = [seed + i if seed is not None else None for i in range(trials)]
+        
         for algorithm in algorithms:
+            current_config += 1
+            logging.info(f"\nConfiguration {current_config}/{total_configs}:")
+            logging.info(f"Running {algorithm.__name__}")
             successes = 0
             stats = {'times_ms': [], 'lengths': [], 'visited': [], 'costs': [], 'replans': []}
 
-            for _ in range(trials):
-                grid = random_grid(grid_size, obstacle_prob)
+            for trial_num, trial_seed in enumerate(trial_seeds, 1):
+                if trial_num % 10 == 0:  # Log progress every 10 trials
+                    logging.info(f"Running trial {trial_num}/{trials}")
+                
+                # Generate static grid with consistent seed
+                grid = generate_static_grid(grid_size, obstacle_prob, max_cost, trial_seed)
                 start, goal = (0, 0), (grid_size - 1, grid_size - 1)
-
-                # Simulate dynamic changes
-                grid = dynamic_obstacles(grid)
 
                 start_time = time.perf_counter()
                 res = algorithm(grid, start, goal)
@@ -54,11 +110,24 @@ def run_dynamic_simulation(algorithms, configurations, trials=100):
                     stats['costs'].append(cost)
                     stats['replans'].append(replan_count)
 
+            # Log summary for this configuration
+            success_rate = round(successes / trials * 100, 2)
+            avg_time = round(mean(stats['times_ms']), 2) if stats['times_ms'] else None
+            avg_length = round(mean(stats['lengths']), 2) if stats['lengths'] else None
+            avg_cost = round(mean(stats['costs']), 2) if stats['costs'] else None
+            
+            logging.info(f"Results for {algorithm.__name__} on {grid_size}×{grid_size} grid:")
+            logging.info(f"Success rate: {success_rate}%")
+            logging.info(f"Average time: {avg_time}ms")
+            logging.info(f"Average path length: {avg_length}")
+            logging.info(f"Average path cost: {avg_cost}")
+            logging.info("-" * 40)
+
             result = {
                 'grid_size': f"{grid_size}×{grid_size}",
                 'algorithm': algorithm.__name__,
                 'trials': trials,
-                'success_rate': round(successes / trials * 100, 2),
+                'success_rate': success_rate,
                 'max_time_ms': round(max(stats['times_ms']), 2) if stats['times_ms'] else None,
                 'min_time_ms': round(min(stats['times_ms']), 2) if stats['times_ms'] else None,
                 'avg_time_ms': round(mean(stats['times_ms']), 2) if stats['times_ms'] else None,
@@ -80,12 +149,50 @@ def run_dynamic_simulation(algorithms, configurations, trials=100):
 
     return results
 
-# Usage example:
-algorithms = [astar_weighted, dijkstra_weighted]
-configurations = [(10, 0.2), (30, 0.2), (50, 0.2), (70, 0.2), (100, 0.2), (200, 0.2),(500,0.2)]
+# Configuration
+algorithms = [astar, dijkstra, dstar_lite]
+configurations = [
+    (10, 0.2),    # Very small grid
+    (30, 0.2),    # Small grid
+    (50, 0.2),    # Medium grid
+    (70, 0.2),    # Medium-large grid
+    (100, 0.2),   # Large grid
+    (200, 0.2),   # Very large grid
+    (500, 0.2)    # Huge grid
+]
 
-simulation_results = run_dynamic_simulation(algorithms, configurations, trials=100)
+# Run simulation with reproducible results
+logging.info("\nStarting Simulation with the following configuration:")
+logging.info(f"Algorithms: {[alg.__name__ for alg in algorithms]}")
+logging.info(f"Grid configurations: {configurations}")
+logging.info("=" * 50)
 
-# Display results
+simulation_results = run_static_simulation(
+    algorithms=algorithms,
+    configurations=configurations,
+    trials=100,  # Number of trials per configuration
+    max_cost=5,  # Maximum cost for non-obstacle cells
+    seed=42      # Fixed seed for reproducibility
+)
+
+# Display and log final results
+logging.info("\nFINAL SIMULATION RESULTS")
+logging.info("=" * 50)
+
+print("\nStatic Pathfinding Simulation Results:")
+print("======================================")
 for res in simulation_results:
-    print(res)
+    result_str = f"""
+Grid Size: {res['grid_size']}
+Algorithm: {res['algorithm']}
+Success Rate: {res['success_rate']}%
+Average Time: {res['avg_time_ms']:.2f}ms
+Average Path Length: {res['avg_path_length']:.2f}
+Average Path Cost: {res['avg_path_cost']:.2f}
+Average Nodes Visited: {res['avg_nodes_visited']:.2f}
+Min/Max Time: {res['min_time_ms']:.2f}ms / {res['max_time_ms']:.2f}ms
+Min/Max Path Length: {res['min_path_length']} / {res['max_path_length']}
+Min/Max Path Cost: {res['min_path_cost']:.2f} / {res['max_path_cost']:.2f}
+----------------------------------------"""
+    print(result_str)
+    logging.info(result_str)
