@@ -5,7 +5,6 @@ from statistics import mean
 import random
 import logging
 from datetime import datetime
-
 from astar_pure import astar
 from dijkstra_pure import dijkstra
 from dstar_lite_pure import dstar_lite
@@ -21,16 +20,7 @@ logging.basicConfig(
 )
 
 def generate_static_grid(size, obstacle_prob, max_cost=5, seed=None):
-    """
-    Generate a static grid with weighted costs and obstacles.
-    Args:
-        size: Grid size (N x N)
-        obstacle_prob: Probability of obstacles (0-1)
-        max_cost: Maximum cost for non-obstacle cells (default: 5)
-        seed: Random seed for reproducibility
-    Returns:
-        grid: 2D list with costs (1-max_cost) and obstacles (9)
-    """
+    
     if seed is not None:
         random.seed(seed)
         np.random.seed(seed)
@@ -49,15 +39,7 @@ def generate_static_grid(size, obstacle_prob, max_cost=5, seed=None):
     return grid
 
 def run_static_simulation(algorithms, configurations, trials=1, max_cost=5, seed=None):
-    """
-    Run static pathfinding simulation with different algorithms and grid configurations.
-    Args:
-        algorithms: List of pathfinding algorithms to test
-        configurations: List of tuples (grid_size, obstacle_prob)
-        trials: Number of trials per configuration
-        max_cost: Maximum cost for non-obstacle cells
-        seed: Random seed for reproducibility
-    """
+
     results = []
     total_configs = len(configurations) * len(algorithms)
     current_config = 0
@@ -172,7 +154,7 @@ simulation_results = run_static_simulation(
     configurations=configurations,
     trials=100,  # Number of trials per configuration
     max_cost=5,  # Maximum cost for non-obstacle cells
-    seed=random.randint(1,1000)      # Fixed seed for reproducibility
+    seed=random.randint(1,1000)      
 )
 
 # Display and log final results

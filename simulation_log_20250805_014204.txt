@@ -1,5 +1,0 @@
-2025-08-05 01:42:04,658 - INFO - 
-Starting Simulation with the following configuration:
-2025-08-05 01:42:04,658 - INFO - Algorithms: ['astar', 'dijkstra', 'dstar_lite']
-2025-08-05 01:42:04,658 - INFO - Grid configurations: [(100, 0.2), (200, 0.2)]
-2025-08-05 01:42:04,658 - INFO - ==================================================

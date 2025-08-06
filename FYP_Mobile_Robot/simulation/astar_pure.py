@@ -23,7 +23,8 @@ def astar(grid, start, goal):
     frontier = [(0 + heuristic(start, goal), start)]
     came_from = {}
     cost_so_far = {start: 0}
-    visited = set()
+    visited = []  # Changed to list to maintain order of exploration
+    frontier_set = {start}  # Track current frontier nodes
 
     # All possible movements (including diagonals)
     directions = [(-1,0), (1,0), (0,-1), (0,1), 
@@ -35,10 +36,11 @@ def astar(grid, start, goal):
         if current == goal:
             break
 
-        if current in visited:
+        if current in set(visited):  # Convert to set for faster lookup
             continue
             
-        visited.add(current)
+        visited.append(current)  # Add to list to maintain order
+        frontier_set.remove(current)  # Remove from frontier set
 
         x, y = current
         for dx, dy in directions:
@@ -64,6 +66,7 @@ def astar(grid, start, goal):
                 cost_so_far[neighbor] = new_cost
                 f_score = new_cost + heuristic(neighbor, goal)
                 heapq.heappush(frontier, (f_score, neighbor))
+                frontier_set.add(neighbor)  # Add to frontier set
                 came_from[neighbor] = current
 
     # Reconstruct path

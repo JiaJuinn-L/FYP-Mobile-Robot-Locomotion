@@ -19,7 +19,8 @@ def astar_weighted(grid, start, goal):
     frontier = [(0 + h(start, goal), start)]
     came_from = {}
     cost_so_far = {start: 0}
-    visited_nodes = set()
+    visited_nodes = []  # Change to list to maintain order of exploration
+    frontier_set = {start}  # Keep track of frontier nodes
     replan_count = 0  # Static case, no dynamic changes for now
 
     while frontier:
@@ -29,9 +30,10 @@ def astar_weighted(grid, start, goal):
             continue
         if current == goal:
             break
-        if current in visited_nodes:
+        if current in set(visited_nodes):
             continue
-        visited_nodes.add(current)
+        visited_nodes.append(current)  # Append to maintain order
+        frontier_set.remove(current)  # Remove from frontier set
 
         x, y = current
         for dx, dy in directions:
@@ -51,6 +53,7 @@ def astar_weighted(grid, start, goal):
                 cost_so_far[neighbor] = new_cost
                 priority = new_cost + h(neighbor, goal)
                 heapq.heappush(frontier, (priority, neighbor))
+                frontier_set.add(neighbor)  # Add to frontier set
                 came_from[neighbor] = current
 
     if goal not in came_from and start != goal:
@@ -116,17 +119,22 @@ def wrap_with_cost(fn):
 astar_cost = wrap_with_cost(astar_weighted)
 
 # ----------------- Plotting -------------------
-def plot_grid(grid, path, visited_nodes, start, goal, title="Grid Pathfinding"):
+def plot_grid_frame(grid, visited_nodes, current_path, frontier_nodes, start, goal, frame_num, title="A* Pathfinding Progress"):
     rows, cols = len(grid), len(grid[0])
     display_grid = deepcopy(grid)
 
     max_cost = max(max(row) for row in grid if row) if grid else 5
-
     terrain_cmap = plt.cm.YlGn
     norm = mcolors.Normalize(vmin=1, vmax=max_cost)
+    
+    # Calculate exploration progress percentage
+    total_cells = rows * cols
+    explored_cells = len(visited_nodes)
+    progress = (explored_cells / total_cells) * 100
 
-    fig, ax = plt.subplots(figsize=(cols / 5, rows / 5))
+    fig, ax = plt.subplots(figsize=(8, 8))
 
+    # Plot base grid with costs
     for r in range(rows):
         for c in range(cols):
             if display_grid[r][c] == 9:
@@ -135,41 +143,96 @@ def plot_grid(grid, path, visited_nodes, start, goal, title="Grid Pathfinding"):
                 color = terrain_cmap(norm(display_grid[r][c]))
                 ax.add_patch(plt.Rectangle((c, r), 1, 1, color=color))
 
+    # Plot visited nodes (explored)
     for r, c in visited_nodes:
         if (r, c) != start and (r, c) != goal:
-            ax.plot(c + 0.5, r + 0.5, 'o', color='gray', markersize=3, alpha=0.4)
+            ax.plot(c + 0.5, r + 0.5, 'o', color='gray', markersize=10, alpha=0.6, label='Explored' if (r,c) == list(visited_nodes)[0] else "")
 
-    if path:
-        path_x = [p[1] + 0.5 for p in path]
-        path_y = [p[0] + 0.5 for p in path]
-        ax.plot(path_x, path_y, color='blue', linewidth=2, zorder=10)
+    # Plot frontier nodes (to be explored)
+    for r, c in frontier_nodes:
+        if (r, c) != start and (r, c) != goal:
+            ax.plot(c + 0.5, r + 0.5, 'o', color='yellow', markersize=10, alpha=0.6, label='Frontier' if (r,c) == list(frontier_nodes)[0] else "")
 
+    # Plot current path
+    if current_path:
+        path_x = [p[1] + 0.5 for p in current_path]
+        path_y = [p[0] + 0.5 for p in current_path]
+        ax.plot(path_x, path_y, color='blue', linewidth=3, zorder=10, label='Current Path')
+
+    # Plot start and goal
     ax.add_patch(plt.Circle((start[1] + 0.5, start[0] + 0.5), 0.3, color='green', zorder=15, label='Start'))
     ax.add_patch(plt.Circle((goal[1] + 0.5, goal[0] + 0.5), 0.3, color='red', zorder=15, label='Goal'))
 
+    # Grid settings
     ax.set_xlim(0, cols)
     ax.set_ylim(0, rows)
     ax.set_xticks(range(cols))
     ax.set_yticks(range(rows))
     ax.set_xticklabels([])
     ax.set_yticklabels([])
-    ax.set_title(title)
+    ax.set_title(f"{title}\nFrame {frame_num}: {len(visited_nodes)} nodes explored ({progress:.1f}% of grid)")
     ax.set_aspect('equal')
-    ax.grid(True, which='both', color='gray', linestyle='--', linewidth=0.3)
+    ax.grid(True, which='both', color='gray', linestyle='--', linewidth=0.5)
     ax.invert_yaxis()
-    ax.legend(loc='upper right', fontsize=8)
+    
+    # Legend without duplicates
+    handles, labels = ax.get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    ax.legend(by_label.values(), by_label.keys(), loc='upper right', fontsize=10)
+    
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f'astar_frame_{frame_num:03d}.png')
+    plt.close()
+
+def plot_grid(grid, path, visited_nodes, start, goal, title="Grid Pathfinding"):
+    rows, cols = len(grid), len(grid[0])
+    if rows != 10 or cols != 10:
+        # Use regular plotting for non-10x10 grids
+        plot_grid_frame(grid, visited_nodes, path, set(), start, goal, 999, title)
+        return
+        
+    display_grid = deepcopy(grid)
+    current_visited = set()
+    frontier = set()
+    frame_num = 0
+    
+    # Initial frame
+    plot_grid_frame(grid, current_visited, [], frontier, start, goal, frame_num, title)
+    frame_num += 1
+    
+    # Plot exploration process
+    step = max(1, len(visited_nodes) // 20)  # Show about 20 frames for exploration
+    for i in range(0, len(visited_nodes), step):
+        current_visited = set(list(visited_nodes)[:i+1])
+        # Calculate frontier (neighbors of visited nodes that aren't visited)
+        frontier = set()
+        for r, c in current_visited:
+            for dr, dc in [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (-1,1), (1,-1), (1,1)]:
+                nr, nc = r + dr, c + dc
+                if (0 <= nr < rows and 0 <= nc < cols and 
+                    grid[nr][nc] != 9 and 
+                    (nr, nc) not in current_visited):
+                    frontier.add((nr, nc))
+        
+        plot_grid_frame(grid, current_visited, [], frontier, start, goal, frame_num, title)
+        frame_num += 1
+    
+    # Plot path building process if path exists
+    if path:
+        for i in range(len(path)):
+            current_path = path[:i+1]
+            plot_grid_frame(grid, visited_nodes, current_path, set(), start, goal, frame_num, title)
+            frame_num += 1
 
 # ----------------- Run Configurations -------------------
 configurations = [
     (10, 0.2),
-    (30, 0.2),
-    (50, 0.2),
-    (70, 0.2),
-    (100, 0.2),
-    (200, 0.2),
-    (500,0.2)
+    # (30, 0.2),
+    # (50, 0.2),
+    # (70, 0.2),
+    # (100, 0.2),
+    # (200, 0.2),
+    # (500,0.2)
 ]
 
 
@@ -179,7 +242,7 @@ results_a_star = []
 for size, prob in configurations:
     start_node = (0, 0)
     goal_node = (size - 1, size - 1)
-    grid = generate_weighted_grid(size, prob, seed=1, start=start_node, goal=goal_node)
+    grid = generate_weighted_grid(size, prob, seed=41, start=start_node, goal=goal_node)
 
     print(f"\n--- A* on {size}x{size} Grid (Obstacle Prob: {prob}) ---")
     path, visited_nodes, total_cost, replan_count = astar_cost(grid, start_node, goal_node)
